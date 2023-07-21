@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');
+
+:root {
+    --navy: #152238;
+    --blue: #187bcd;
+    --white: #ffffff;
+    --grey: #808588;
+}
+
+body,
+h1,
+h2,
+h3,
+input {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+input {
+    appearance: none;
+    cursor: pointer;
+}
+
+li {
+    list-style: none;
+}
+
+/* header */
+.header {
+    box-sizing: border-box;
+    padding: 20px 0;
+    text-align: center;
+    background-image: linear-gradient(to right, var(--blue), var(--navy));
+}
+
+.header h1 {
+    color: #fff;
+}
+
+/* weather-wrap */
+.weather-wrap {
+    display: flex;
+}
+
+.search-section {
+    /* flex: 1 0 0; */
+}
+
+.search-box {
+    box-sizing: border-box;
+    padding: 15px 10px;
+} 
+
+.search-box label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.search-box .city-input {
+    box-sizing: border-box;
+    padding-left: 10px;
+    margin-top: 10px;
+    border: 1px solid var(--grey);
+    border-radius: 5px;
+    width: 300px;
+    height: 40px;
+}
+
+.search-box .search-btn {
+    box-sizing: border-box;
+    padding: 10px 0;
+    border-radius: 5px;
+    margin-top: 15px;
+    display: block;
+    width: 100%;
+    background-color: var(--blue);
+    color: var(--white);
+}
