@@ -8,12 +8,9 @@ let resultFuture = document.querySelector(".result-future");
 let cityLists = localStorage.getItem("cityName");
 if(!cityLists){
     cityLists = [];
+}else{
+    cityLists = JSON.parse(cityLists);
 }
-// if(!cityLists){
-//     cityLists = [];
-// }else{
-//     cityLists = JSON.parse(cityLists);
-// }
 
 searchBtn.addEventListener("click", function(event){
     event.preventDefault();
@@ -24,9 +21,12 @@ searchBtn.addEventListener("click", function(event){
         return;
     }
 
-    // cityLists.push(cityValue);
-    // window.localStorage.setItem("cityName", cityLists);
+    if(!cityLists.includes(cityValue)){
+        cityLists.push(cityValue);
+        localStorage.setItem("cityName", JSON.stringify(cityLists));
+    }
 
+    getLocalStorageData();
     getWeatherData(cityValue);
 })
 
@@ -63,6 +63,7 @@ function getCityCoordinates(cityValue){
         .then(function(data){
             if(data.length === 0){
                 alert("City not found");
+                throw new Error("City not found");
             }
             return {
                 lat: data[0].lat,
@@ -74,12 +75,16 @@ function getCityCoordinates(cityValue){
 // Get current weather data and display on the page
 function displayCurrentWeather(cityName, currentData){
     let date = new Date(currentData.dt * 1000).toLocaleDateString("en-US");
+    let iconUrl = `https://openweathermap.org/img/wn/${currentData.weather[0].icon}.png`;
     let temperature = currentData.temp.day;
     let windSpeed = currentData.wind_speed;
     let humidity = currentData.humidity;
 
     let currentEl = `
-        <h2 class="current-text current-title">${cityName} (${date})</h2>
+        <div class="current-text">
+            <h2 class="current-title">${cityName} (${date})</h2>
+            <img src="${iconUrl}" alt="Weather icon" />
+        </div>
         <p class="current-text">Temp: ${temperature} ℉</p>
         <p class="current-text">Wind: ${windSpeed} MPH</p>
         <p class="current-text">Humidity: ${humidity} %</p>
@@ -89,9 +94,9 @@ function displayCurrentWeather(cityName, currentData){
     resultCurrent.style.border = "1px solid var(--grey)";
 }
 
+
 // Get a 5-Day forecast data and display on the page
 function displayForecastWeather(forecastData){
-    console.log(forecastData)
     let forecastTitle = `<div class="forecast-title">5-Day Forecast</div>`;
     resultFuture.innerHTML = forecastTitle;
 
@@ -100,7 +105,7 @@ function displayForecastWeather(forecastData){
     
     for(let i = 0; i < forecastData.length; i++){
         let date = new Date(forecastData[i].dt * 1000).toLocaleDateString("en-US");
-        let imgUrl = `https://openweathermap.org/img/wn/${forecastData[i].weather[0].icon}.png`;
+        let iconUrl = `https://openweathermap.org/img/wn/${forecastData[i].weather[0].icon}.png`;
         let temperature = forecastData[i].temp.day;
         let windSpeed = forecastData[i].wind_speed;
         let humidity = forecastData[i].humidity;
@@ -111,7 +116,7 @@ function displayForecastWeather(forecastData){
 
         let forecastEl = `
             <h3 class="forecast-text">${date}</h3>
-            <img src="${imgUrl}" alt="Weather icon" />
+            <img src="${iconUrl}" alt="Weather icon" />
             <p class="forecast-text">Temp: ${temperature} ℉</p>
             <p class="forecast-text">Wind: ${windSpeed} MPH</p>
             <p class="forecast-text">Humidity: ${humidity} %</p>
@@ -126,15 +131,36 @@ function displayForecastWeather(forecastData){
 
 
 // Get lists of seaching data from local storage
-// function getLocalStorageData(){
-//     let historyEl = '';
-//     for(let i = 0; i < storedLists.length; i++){
-//         historyEl += `
-//         <li>
-//             <button type="button">${storedLists[i]}</button>
-//         </li>
-//         `;
-//     }
-//     searchHistoryUl.innerHTML = historyEl;
-// }
-// getLocalStorageData();
+function getLocalStorageData(){
+    let historyAddEl = "";
+    for(let i = 0; i < cityLists.length; i++){
+        let historyEl = `
+        <li>
+            <button type="button" data-value="${cityLists[i]}" class="history-btn">
+                ${cityLists[i]}
+            </button>
+        </li>
+        `;
+        historyAddEl += historyEl;
+    }
+    
+    searchHistoryUl.innerHTML = historyAddEl;
+    handleHistoryButton();
+}
+getLocalStorageData();
+
+
+// When the history items are clicked, display selected local weather
+function getHistoryData(){
+    let dataValue = this.getAttribute("data-value");
+    getWeatherData(dataValue);
+}
+
+function handleHistoryButton(){
+    let historyBtns = document.querySelectorAll(".history-btn");
+    historyBtns.forEach(function(button){
+        button.addEventListener("click", getHistoryData);
+    });    
+}
+handleHistoryButton();
+

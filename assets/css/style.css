@@ -57,9 +57,6 @@ li {
     flex: 0 0 250px;
 }
 
-.search-box {
-} 
-
 .search-box label {
     display: block;
     font-size: 1.2rem;
@@ -140,6 +137,16 @@ li {
 
 .result-current .current-text:last-child {
     margin-bottom: 0;
+}
+
+.current-text h2,
+.current-text img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.current-text img {
+    width: 40px;
 }
 
 
