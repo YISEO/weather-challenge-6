@@ -54,7 +54,7 @@ function getWeatherData(cityValue) {
 
 // When the search button is clicked, get a city coordinates using the API
 function getCityCoordinates(cityValue){
-    let getCoordinatesUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityValue}&appid=${apiKey}`;
+    let getCoordinatesUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${cityValue}&appid=${apiKey}`;
     
     return fetch(getCoordinatesUrl)
         .then(function(response) {
